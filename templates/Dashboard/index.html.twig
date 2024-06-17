@@ -1,0 +1,77 @@
+{% extends 'Layouts/default.html.twig' %}
+
+{% block content %}
+
+    <section class="vh-100 gradient-custom">
+        {{ include( 'Dashboard/navigation.html.twig' ) }}
+        <div class="container py-3">
+            <div class="row d-flex justify-content-center align-items-top h-100">
+                <div class="col col-xl-10">
+
+                    <div class="card">
+                        <div class="card-body p-5">
+                            {# Task Input #}
+                            <form class="d-flex justify-content-center align-items-center mb-4" action="{{ path('dashboard_add') }}" method="post">
+                                <div class="form-outline flex-fill">
+                                    <input type="text" id="form2" class="form-control" name="task" placeholder="New Task..."/>
+                                </div>
+                                <button class="btn btn-info ms-2">Add</button>
+                            </form>
+
+                            {# Flashbag Error Handling #}
+                            {% for flash_message in app.flashes('error') %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ flash_message }}
+                                </div>
+                            {% endfor %}
+                            {# /Flashbag Error Handling #}
+
+                            {# Tabs #}
+                            <ul class="nav nav-tabs mb-4 pb-2">
+                                <li class="nav-item">
+                                    <a href="{{ path('dashboard') }}" class="nav-link {{ highlight|default('') == '' ? 'active' : '' }}" data-mdb-toggle="tab" href="#ex1-tab-1">All</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ path('dashboard_filter', { filter: 'not-done'}) }}" class="nav-link {{ highlight|default('') == 'not-done' ? 'active' : '' }}" data-mdb-toggle="tab" href="#ex1-tab-1">Opened</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ path('dashboard_filter', { filter: 'done' }) }}" class="nav-link {{ highlight|default('') == '' ? 'done' : '' }}" data-mdb-toggle="tab" href="#ex1-tab-1">Done</a>
+                                </li>
+                            </ul>
+                            {# /Tabs #}
+
+                            {# Tabs Content #}
+                            <div class="tab-content" id="ex1-content">
+                                <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                                    <ul class="list-group mb-0">
+                                        {% for task in todoItems %}
+                                            <li class="list-group-item task-item d-flex align-items-center border-0 mb-2 rounded {{ task.isDone ? 'is-done' : '' }}" data-id="{{ task.id }}" style="background-color: #f4f6f7;">
+                                                <input class="form-check-input me-2 task-checkbox" type="checkbox" value="" aria-label="..." {{ task.isDone ? ' checked' : '' }} />
+                                                {{ task.taskName }}
+                                                <a href="{{ path('dashboard_delete', { id: task.id }) }}" class="btn btn-danger ms-auto task-delete">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="22" height="22" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                        <path d="M4 7l16 0"/>
+                                                        <path d="M10 11l0 6"/>
+                                                        <path d="M14 11l0 6"/>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {# /Tabs Content #}
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
